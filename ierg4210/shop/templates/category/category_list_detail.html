@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	{% breadcrumb "Category List" "#" %}
+{% endblock %}
+
+
+{% block content %}
+	<h1>All products under {{ category.name }}</h1>
+
+
+
+	<div style="margin-left:20px;margin-top:20px">
+		<h4>Products:</h4>
+
+		{% for product in category_list_detail.all %}
+			<hr>
+			<p><strong>Produtc Name: </strong> <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> </p>
+			<p><strong>Product Image: </strong><a href="{{ product.get_absolute_url }}"> <img height=200 width=200  src='{{ product.image.image.url }}'></a> </p>
+
+		{% endfor %}
+	</div>
+{% endblock %}

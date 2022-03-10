@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <body>
+	<p>Enter 2 numbers.</p>
+	<form action="/add/" method="get">
+	  a: <input type="text" id="a" name="a"> <br>
+	  b: <input type="text" id="b" name="b"> <br>
+	  <p>result: <span id='result'></span></p>
+	  <button type="button" id='sum'>Submit</button>
+	</form>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script>
+	  $(document).ready(function(){
+			  $("#sum").click(function(){
+					  var a = $("#a").val();
+					  var b = $("#b").val();
+
+					  $.get("{% url 'add' %}",{'a':a,'b':b}, function(ret){
+							  $('#result').html(ret)
+							})
+					});
+			});
+	</script>
+  </body>
+</html>

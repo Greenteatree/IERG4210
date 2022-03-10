@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block breadcrumbs %}
+	{{ block.super }}
+	{% breadcrumb "product" "#" %}
+{% endblock %}
+
+{% block content %}
+
+	<div class="d-grid gap-3">
+		<img src='{{product.image.image.url}}'>
+		<p><strong>Product Name: {{ product.name }}</strong></p>
+		<p><strong>Product Price :{{ product.price }} </strong> <button type="button" class="btn btn-primary" id="add-to-cart-button">Add to Cart</button ></p>
+		<p><strong>Current Invertory : {{ inventory }}</strong></p>
+		<p>Description: {{ product.description }}</p>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	{{ product_json|json_script:"data" }}
+
+	<script src="{% static 'js/shopping-cart.js' %}">
+
+	</script>
+{% endblock %}
+
+
+
+
