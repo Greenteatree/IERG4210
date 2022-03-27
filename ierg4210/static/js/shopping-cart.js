@@ -1,11 +1,52 @@
+const val = JSON.parse(document.getElementById('data').textContent);
+var data = JSON.parse(val);
+try {
+	//const val = JSON.parse(document.getElementById('data').textContent);
+	testingThePid = data.pid;
+	if (typeof data.pid == "undefined"){
+		console.log("Change data.");
+		throw "The json parse is not as normal";
+	}
+} catch (error){
+	
+	function changeData(event) {
+		data = JSON.parse(val);
+		data = data[event.target.name];
+	}	
+	
+	const nodeList = document.querySelectorAll(".btn-primary");
+	for (let i = 0; i < nodeList.length; i++){
+		console.log(nodeList[i]);
+		nodeList[i].addEventListener("click", changeData);
+		nodeList[i].addEventListener("click", addProdcut);
+		//nodeList[i].addEventListener("click", testAlertFunction);
+	}
 
+}
+function testAlertFunction(event){
+
+	alert(event.target.name);
+}
+/*
+function changeData(event) {
+        var data = JSON.parse(val);
+        data = data[event.target.name];
+
+
+}
+*/
 document.getElementById("add-to-cart-button").addEventListener("click", addProdcut);
 window.addEventListener("load", shoppingCartReload);
 window.addEventListener("load", amountInit);
 
+/*
 const val = JSON.parse(document.getElementById('data').textContent);
-const data = JSON.parse(val);
-
+try {
+	const data = JSON.parse(val);
+} catch (error){
+		
+}
+*/
 function checkProductExist(pid){
     let exist = document.getElementById(pid);
 	return (exist !== null);
@@ -40,7 +81,8 @@ function shoppingCartAddItem(localStorageItem){
     itemInput.setAttribute("size", 10);
     itemInput.setAttribute("placeholder", "Range: [1, ]");
     content.appendChild(itemInput);
-
+	let deleteItemButton = deleteButton(localStorageItem);
+    content.appendChild(deleteItemButton);
     document.getElementById("shopping-cart-content").appendChild(content);
 
 }
@@ -90,9 +132,15 @@ function amountUpdate(event){
 	if (item === null) return ;
 	
 	let oldQuantity = item.quantity;
-	item.quantity = newQuantity;
+	if (isNaN(newQuantity)) {
+		let one = 1;
+		newQuantity = 0;
+
+	} else {
+		item.quantity = newQuantity;
+	}
 	let amount = 0;
-	if (localStorage.getItem("amount") === null){
+	if (localStorage.getItem("amount") === null || localStorage.getItem("amount") === "NaN"){
 		localStorage.setItem("amount", amount);
 	}else {
 		amount = parseInt(localStorage.getItem("amount"));
@@ -100,6 +148,7 @@ function amountUpdate(event){
 		localStorage.setItem("amount", amount);
 	}
 	localStorage.setItem(item.pid, JSON.stringify(item));
+
 	
 	document.getElementById("total-amount").textContent = "Total amount: " + amount;
 }
@@ -113,7 +162,7 @@ function addProdcut(){
 
     const content = document.createElement("li");
     content.setAttribute("id", data.pid);
-    let url = window.location.href.slice(-1);
+//    let url = window.location.href.slice(-1);
 
 
 //  const val = JSON.parse(document.getElementById('data').textContent);
@@ -131,7 +180,7 @@ function addProdcut(){
 	input.name = data.pid;
     input.defaultValue = 1;
     input.setAttribute("min", 1);
-    input.setAttribute("max", 3);
+//    input.setAttribute("max", 3);
     input.setAttribute("size", 10);
     input.setAttribute("placeholder", "Range: [1, ]");
     content.appendChild(input);
@@ -139,9 +188,19 @@ function addProdcut(){
     document.getElementById("shopping-cart-content").appendChild(content);
 	productData = JSONdataToLocalDict(data);
 	localStorage.setItem(data.pid.toString(), JSON.stringify(productData));
-	if (localStorage.getItem("amount") === null) {
-		localStorage.setItem("amount",data.price);
+	let amount = 0;
+	if (localStorage.getItem("amount") === null || localStorage.getItem("amount") === "NaN" || isNaN(localStorage.getItem("amount"))) {
+		amount += 0;
+    } else {
+		amount += parseInt(localStorage.getItem("amount"));
 	}
+
+	
+	amount += parseInt(data.price);
+	localStorage.setItem("amount", amount);
+
+	let button = deleteButton(localStorage.getItem(data.pid.toString()));
+	content.appendChild(button);
 	// Hard coded can use a new function
 	// add to eventlistener since line 3 using load
 	amountInit();
@@ -157,4 +216,30 @@ function JSONdataToLocalDict(JSONdata){
 	
 
 }
+
+
+function deleteButton(localStorageItem){
+    let item = JSON.parse(localStorageItem);
+    let button = document.createElement("BUTTON");
+    button.addEventListener("click", amountUpdate);
+    button.addEventListener("click", deleteShoppingCartItem);
+    button.itemPid = item.pid;
+    button.name = item.pid;
+    let text = document.createTextNode("Delete");
+    button.value = "X";
+    button.append(text);
+    return button;
+
+}
+
+function deleteShoppingCartItem(event){
+    //let item = JSON.parse(localStorageItem);
+
+    let targetListItem = document.getElementById(event.target.itemPid);
+    localStorage.removeItem(event.target.itemPid);
+    targetListItem.remove();
+
+}
+
+
 

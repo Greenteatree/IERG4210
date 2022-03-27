@@ -1,5 +1,5 @@
 document.getElementById("add-to-cart-button").addEventListener("click", addProdcut);
-window.addEventListener("load", shoppingCartReload());
+window.addEventListener("load", shoppingCartReload);
 
 const val = JSON.parse(document.getElementById('data').textContent);
 const data = JSON.parse(val);
@@ -35,7 +35,7 @@ function shoppingCartAddItem(localStorageItem){
     itemInput.setAttribute("size", 10);
     itemInput.setAttribute("placeholder", "Range: [1, ]");
     content.appendChild(itemInput);
-
+	
     document.getElementById("shopping-cart-content").appendChild(content);
 
 }
@@ -87,7 +87,8 @@ function addProdcut(){
     input.setAttribute("size", 10);
     input.setAttribute("placeholder", "Range: [1, ]");
     content.appendChild(input);
-
+	let deleteItemButton = deleteButton(localStorageItem);
+    content.appendChild(deleteItemButton);	
     document.getElementById("shopping-cart-content").appendChild(content);
 	productData = JSONdataToLocalDict(data);
 	localStorage.setItem(data.pid.toString(), JSON.stringify(productData));
@@ -104,4 +105,29 @@ function JSONdataToLocalDict(JSONdata){
 	
 
 }
+
+
+function deleteButton(localStorageItem){
+    let item = JSON.parse(localStorageItem);
+    let button = document.createElement("BUTTON");
+    button.addEventListener("click", amountUpdate);
+    button.addEventListener("click", deleteShoppingCartItem);
+    button.itemPid = item.pid;
+    button.name = item.pid;
+    let text = document.createTextNode("Delete");
+    button.value = "X";
+    button.append(text);
+    return button;
+
+}
+
+function deleteShoppingCartItem(event){
+    //let item = JSON.parse(localStorageItem);
+
+    let targetListItem = document.getElementById(event.target.itemPid);
+    localStorage.removeItem(event.target.itemPid);
+    targetListItem.remove();
+
+}
+
 

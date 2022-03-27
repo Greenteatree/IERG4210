@@ -1,4 +1,4 @@
-window.addEventListener("load", shoppingCartReload());
+window.addEventListener("load", shoppingCartReload);
 window.addEventListener("load", amountInit);
 
 function checkProductExist(pid){
@@ -24,12 +24,15 @@ function shoppingCartAddItem(localStorageItem){
     content.appendChild(itemImg);
     content.appendChild(itemName);
     let itemInput = document.createElement("input");
+	itemInput.name = item.pid; 
     itemInput.type = "number";
     itemInput.defaultValue = item.quantity;
     itemInput.setAttribute("min", 1);
     itemInput.setAttribute("size", 10);
     itemInput.setAttribute("placeholder", "Range: [1, ]");
     content.appendChild(itemInput);
+	let deleteItemButton = deleteButton(localStorageItem);
+	content.appendChild(deleteItemButton);
 
     document.getElementById("shopping-cart-content").appendChild(content);
 }
@@ -56,10 +59,19 @@ function amountUpdate(event){
     let item = JSON.parse(localStorageItem);
     if (item === null) return ;
 
+	
     let oldQuantity = item.quantity;
-    item.quantity = newQuantity;
+	if (isNaN(newQuantity)) {
+        let one = 1;
+        newQuantity = 0;
+
+    } else {
+        item.quantity = newQuantity;
+    }
+
+	
     let amount = 0;
-    if (localStorage.getItem("amount") === null){
+    if (localStorage.getItem("amount") === null  || localStorage.getItem("amount") === "NaN"){
         localStorage.setItem("amount", amount);
     }else {
         amount = parseInt(localStorage.getItem("amount"));
@@ -72,4 +84,25 @@ function amountUpdate(event){
 }
 
 
+function deleteButton(localStorageItem){
+	let item = JSON.parse(localStorageItem);	
+	let button = document.createElement("BUTTON");
+	button.addEventListener("click", amountUpdate);
+	button.addEventListener("click", deleteShoppingCartItem);
+	button.itemPid = item.pid;
+	button.name = item.pid;
+	let text = document.createTextNode("Delete");
+	button.value = "X";
+	button.append(text);
+	return button;
 
+}
+
+function deleteShoppingCartItem(event){
+	//let item = JSON.parse(localStorageItem);
+	
+	let targetListItem = document.getElementById(event.target.itemPid);
+	localStorage.removeItem(event.target.itemPid);
+	targetListItem.remove();
+
+}

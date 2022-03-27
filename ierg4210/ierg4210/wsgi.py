@@ -23,5 +23,8 @@ sys.path.insert(0, PROJECT_DIR)
  
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ierg4210.settings')
 
+# SSL
+os.environ['HTTPS'] = "on"
+
 application = get_wsgi_application()
 

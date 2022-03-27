@@ -17,11 +17,17 @@ def index(request):
     paginator = Paginator(all_product, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    products_json = {}
+
+    for product in all_product:
+        products_json[str(product.pid)] = {"name": product.name, "pid": product.pid, "price": product.price, "image_url": product.image.image.url, "catid": product.catid.catid}
+
 
     context = {
         'num_category': num_category,
         'num_instances': num_instances,
         'all_product': all_product,
+        'products_json': json.dumps(products_json),
         'page_obj': page_obj,
     } 
     context  = {**get_side_bar_info(), **context}

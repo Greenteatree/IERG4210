@@ -1,4 +1,9 @@
-
+/*
+ * Not enabled!
+ *
+ *
+ * 
+ * */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -9,7 +14,13 @@
     right: 0;
     
 }
+/*
 .shopping-cart:hover .dropdown-content {
+    display: block;
+}
+*/
+
+#shopping-cart-button:hover ~ .dropdown-content{
     display: block;
 }
 .dropdown-content a:hover {background-color: #f1f1f1}

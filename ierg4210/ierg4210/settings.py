@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-mr_ee#jwd=zr5h%g#9+!f=8*81&+v(@(tj%oh@z4j!$ajmxmg3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-16-163-186-113.ap-east-1.compute.amazonaws.com', '16.163.186.113',  'secure.s26.ierg4210.ie.cuhk.edu.hk']
+ALLOWED_HOSTS = ['ec2-16-163-186-113.ap-east-1.compute.amazonaws.com', '16.163.186.113',  'secure.s26.ierg4210.ie.cuhk.edu.hk', 's26.ierg4210.ie.cuhk.edu.hk',  'ip-172-31-11-119.ap-east-1.compute.internal']
 
 
 # Application definition
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'ierg4210.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/home/ec2-user/IERG4210/ierg4210/templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,3 +132,20 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SSL
+# secure proxy SSL header and secure cookies
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# session expire at browser close
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# wsgi scheme
+os.environ['wsgi.url_scheme'] = 'https'
+# SSL section
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
+PASSWORD_LOGOUT_URL = 'accounts/password_change/done'

@@ -12,7 +12,7 @@
 		<link rel="stylesheet" href="{% static 'css/shopping-cart.css' %}">
 		<link rel="icon" 
 					type="image/png" 
-					href="https://cdn-icons.flaticon.com/png/512/2903/premium/2903852.png?token=exp=1646725629~hmac=53e1c653a7549f941b641eb66011ff8b" />
+					href="https://cdn-icons-png.flaticon.com/512/102/102665.png" />
 		{% load django_bootstrap_breadcrumbs %}
 	</head>
 
@@ -27,11 +27,36 @@
 				</ul>
 				<div class="shopping-cart">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="shopping-cart-button">Shopping Cart</button>
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="account-button">Account</button>
+
 					<div class="dropdown-content">
 						<ul style="list-style-type:none" id="shopping-cart-content">
 							<li><p id="total-amount">Total amount: 0</p></li>
+							<button class="btn btn-primary ">Check Out!</button> 
 						</ul>
 					</div>
+
+					<div class="account-dropdown-content">
+						<ul style="list-style-type:none" id="account-dropdown-content-list">
+						<p>Welcome! {% if user.is_authenticated %} {{ user.username  }} {% else %} guest
+						{% endif %}
+						</p>
+						{% if user.is_staff %}
+							<a href="/admin/" class="btn btn-outline-success my-2 my-sm-0">Admin</a>
+						{% endif %}
+						{% if user.is_staff or user.is_authenticated %}
+							<a href="{% url 'password_change' %}" class="btn btn-outline-success my-2 my-sm-0">Change Password</a>
+						{% endif %}
+
+						{% if user.is_authenticated  %}
+							<a href="{% url 'logout' %}" class="btn btn-outline-success my-2 my-sm-0">Logout</a>
+						{% else %}
+							<a href="{% url 'login' %}" class="btn btn-outline-success my-2 my-sm-0">Login</a>
+						{% endif %}
+
+
+            </ul>
+          </div>
 				</div>
 			</div>
 		</nav>

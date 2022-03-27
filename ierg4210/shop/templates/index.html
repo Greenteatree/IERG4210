@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-
+{% load static %}
 {% block breadcrumbs %}
 	{{ block.super }}
 {% endblock %}
@@ -26,7 +26,14 @@
 	<h1><strong>Welcome to online shop!</h1></strong>
 
 
-		<h2>Dynamic content</h2>
+		<h2>Welcome 
+			{% if user.is_authenticated %} 
+				{{ user.username  }}
+			{% else %}
+				guest
+			{% endif %}
+			!</h2>
+
 		<p>The shop has the following record counts:</p>
 		<ul>
 			<li><strong>Categories:</strong> {{  num_category}}</li>
@@ -35,18 +42,27 @@
 
 		<div style="margin-left:20px;margin-top:20px">
 			<h4>Products:</h4>
-			<!--
-				{ for product in all_product %}
-				<hr>
-				<p><strong>Produtc Name: </strong> <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> </p>
-				<p><strong>Product Image: </strong><a href="{{ product.get_absolute_url }}"> <img height=200 width=200  src='{{ product.image.image.url }}'></a> </p>
 
-				{ endfor %}
-			-->
-			{% for product in page_obj  %}
-				<p><strong>Produtc Name: </strong> <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> </p>
-				<p><strong>Product Image: </strong><a href="{{ product.get_absolute_url }}"> <img height=200 width=200  src='{{ product.image.image.url }}'></a></p>
-			{% endfor  %}
+
+			<div class="card-group">
+				{% for product in page_obj  %}
+					<div class="card" >
+						<a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{product.image.image.url }}" alt="Card image cap"></a>
+
+						<div class="card-body">
+							<a  href="{{ product.get_absolute_url }}" ><h5 class="card-title">{{ product.name }}</h5></a>
+
+							<p class="card-text">{{ product.description }}</p>
+							<h6 class="card-title">Price: {{ product.price }}  <button class="btn btn-primary" id="add-to-cart-button" name="{{ product.pid }}">Add to Cart</button></h6>
+							<!--<a href="#" class="btn btn-primary">Add to Cart</a>-->
+						</div>
+					</div>
+					<!--
+						<p><strong>Produtc Name: </strong> <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> </p>
+						<p><strong>Product Image: </strong><a href="{{ product.get_absolute_url }}"> <img height=200 width=200  src='{{ product.image.image.url }}'></a></p>
+					-->
+				{% endfor  %}
+			</div>
 			<div class="pagination">
 				<span class="step-links">
 					{% if page_obj.has_previous %}
@@ -83,4 +99,11 @@
 			-->
 		{% endblock %}
 
+{% block javascript %}
+  {{ products_json|json_script:"data" }}
+
+  <script src="{% static 'js/shopping-cart.js' %}">
+
+  </script>
+{% endblock %}
 

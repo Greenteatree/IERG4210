@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
   <body>
+		<a href="{% url 'password_change' %}">password_change</a>
 	<p>Enter 2 numbers.</p>
-	<form action="/add/" method="get">
+	<form action="/add/" method="post">
+		{% csrf_token %}
 	  a: <input type="text" id="a" name="a"> <br>
 	  b: <input type="text" id="b" name="b"> <br>
 	  <p>result: <span id='result'></span></p>
