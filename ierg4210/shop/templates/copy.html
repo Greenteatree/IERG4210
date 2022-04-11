@@ -1,4 +1,39 @@
 <!DOCTYPE html>
+<!--
+	<html>
+	<body>
+	<a href="{% url 'password_change' %}">password_change</a>
+	<p>Enter 2 numbers.</p>
+	<form action="/add/" method="post">
+	{% csrf_token %}
+	a: <input type="text" id="a" name="a"> <br>
+	b: <input type="text" id="b" name="b"> <br>
+	<p>result: <span id='result'></span></p>
+	<button type="button" id='sum'>Submit</button>
+	</form>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+	 $("#sum").click(function(){
+	 var a = $("#a").val();
+	 var b = $("#b").val();
+
+	 $.get("{% url 'add' %}",{'a':a,'b':b}, function(ret){
+	 $('#result').html(ret)
+	 })
+	 });
+	 });
+	</script>
+	</body>
+	</html>
+	
+	-->
+	<!DOCTYPE html>
 	<html lang="en">
 
 		<head>
@@ -14,9 +49,51 @@
 
 			<!-- Include the PayPal JavaScript SDK -->
 			<script src="https://www.paypal.com/sdk/js?client-id=AfZKRMqCg5jmIL55zADZFf0SoS-dTsiY2QeJ32PWFnf8-_XU1WIlxmjY77Dqujwb8Pp3WcXrNvTN2UHE&currency=USD"></script>
+
+			<script>
+				// Render the PayPal button into #paypal-button-container
+				paypal.Buttons({
+
+									// Set up the transaction
+									createOrder: function(data, actions) {
+														return actions.order.create({
+																			purchase_units: [{
+																								amount: {
+																													value: '88.44'
+																												}
+																							}]
+																		});
+													},
+
+									// Finalize the transaction
+									onApprove: function(data, actions) {
+														return actions.order.capture().then(function(orderData) {
+																			// Successful capture! For demo purposes:
+																			console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+																			var transaction = orderData.purchase_units[0].payments.captures[0];
+																			alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+																			// Replace the above to show a success message within this page, e.g.
+																			// const element = document.getElementById('paypal-button-container');
+																			// element.innerHTML = '';
+																			// element.innerHTML = '<h3>Thank you for your payment!</h3>';
+																			// Or go to another URL:  actions.redirect('thank_you.html');
+																		});
+													}
+
+
+								}).render('#paypal-button-container');
+			</script>
+			
 			<!--
 			<h2>Testing django-paypal</h2>
 			{{ form.render }}
+
+
+
+			
+
+
 
 			<h2>Testing braintree</h3>
 			<script src="https://js.braintreegateway.com/web/dropin/1.18.0/js/dropin.min.js"></script>
@@ -60,55 +137,19 @@
 												});
 			</script>
 			
-			-->	
+			
 			<h2>Testing braintree client code</h2>
 			<!-- Load the client component. -->
+		<!--
 <script src="https://js.braintreegateway.com/web/3.85.2/js/client.min.js"></script>
 
 <!-- Load the PayPal Checkout component. -->
 <script src="https://js.braintreegateway.com/web/3.85.2/js/paypal-checkout.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <div id="paypal-button"></div>
 <script>
-	totalAmount = 0;
-	function calAmount(){
-			for (var key in localStorage)   {
-					if (parseInt(key)) getPrice(key);
-				}
 
-		}
-
-			function getPrice(productPID){
-					$.ajax({
-                    type: 'POST',
-                    url: '{% url "ajaxTest" %}',
-										data: {'pid': productPID }
-                }).done(function (result) {
-                   //do accordingly
-										//console.log(result);
-										quantity = JSON.parse( localStorage.getItem(productPID))['quantity'];
-										totalAmount += parseInt(result)*parseInt(quantity);
-										totalAmountUSD = parseInt(totalAmount/7.85);
-										
-
-
-                });
-					
-
-		}
-
-
-		
-	</script>
-<script>
-	//$.when(calAmount()).done(buttonInit);
-
-	console.log('the amount', totalAmount);
-	// Create a client.
-	calAmount();
-	buttonInit();
-		function buttonInit(){
-				//totalAmountUSD = totalAmount/7.85;i
+// Create a client.
 braintree.client.create({
 		authorization: "{{ request.session.braintree_client_token }}",
 }, function (clientErr, clientInstance) {
@@ -135,10 +176,8 @@ braintree.client.create({
         createOrder: function () {
           return paypalCheckoutInstance.createPayment({
             flow: 'checkout', // Required
-            amount: totalAmountUSD, // Required
-						currency: 'USD', // Required, must match the currency passed in with loadPayPalSDK
-
-						//lineItem: {'kind': 'credit', 'name':'iPhone 13', 'quantity':1, "unitAmount": "866"},
+            amount: 12.00, // Required
+            currency: 'USD', // Required, must match the currency passed in with loadPayPalSDK
 
             intent: 'capture', // Must match the intent passed in with loadPayPalSDK
 
@@ -159,34 +198,7 @@ braintree.client.create({
 
         onApprove: function (data, actions) {
           return paypalCheckoutInstance.tokenizePayment(data, function (err, payload) {
-
-							//get pid & quantity
-							var ajaxData = {};
-
-							for (var key in localStorage)   {
-									if (parseInt(key)){
-											quantity = JSON.parse( localStorage.getItem(key))['quantity'];
-											ajaxData[key] = quantity;
-										}
-								}
-							ajaxData['paymentMethodNonce'] =  payload.nonce;
-							ajaxData['csrfmiddlewaretoken'] =  '{{ csrf_token }}';
-							ajaxData['amount'] =  totalAmountUSD;
-
-
-
             // Submit `payload.nonce` to your server
-							$.ajax({
-                    type: 'POST',
-                    url: '{% url "payment" %}',
-                    //data: {'paymentMethodNonce': payload.nonce,
-												//        'csrfmiddlewaretoken': '{{ csrf_token }}', 'amount': totalAmountUSD, }
-									data: ajaxData
-                }).done(function (result) {
-                   //do accordingly
-										console.log(result);
-										
-                });
           });
         },
 
@@ -209,8 +221,9 @@ braintree.client.create({
 
 });
 
-	}
+
 	</script>
+	-->
 		</body>
 
 	</html>

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Product, Category, ProductInstance, Image
+from .models import Product, Category, ProductInstance, Image, Transaction
 
 #admin.site.register(Product)
 #admin.site.register(Category)
@@ -19,3 +19,8 @@ class ProductAdmin(admin.ModelAdmin):
  
 admin.site.register(Image,  readonly_fields=('my_image_thumbnail',))
 admin.site.register(ProductInstance)  
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('invoice', 'digest', 'status', 'productList')
+

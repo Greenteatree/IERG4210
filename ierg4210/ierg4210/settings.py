@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_bootstrap_breadcrumbs',
     'shop.apps.ShopConfig',
     'dynamic_breadcrumbs',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,7 @@ os.environ['wsgi.url_scheme'] = 'https'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
 PASSWORD_LOGOUT_URL = 'accounts/password_change/done'
+
+# use the paypal sandbox
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = "online_shop4210@gmail.com"
