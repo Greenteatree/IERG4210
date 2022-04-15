@@ -47,7 +47,7 @@
 			<div class="card-group">
 				{% for product in page_obj  %}
 					<div class="card" >
-						<a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{product.image.image.url }}" alt="Card image cap"></a>
+						<a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.image.url }}" alt="Card image cap"></a>
 
 						<div class="card-body">
 							<a  href="{{ product.get_absolute_url }}" ><h5 class="card-title">{{ product.name }}</h5></a>
@@ -99,10 +99,11 @@
 			-->
 		{% endblock %}
 
-{% block javascript %}
-  {{ products_json|json_script:"data" }}
+		{% block javascript %}
 
-  <script src="{% static 'js/shopping-cart.js' %}">
+			{{ products_json|json_script:"data" }}
+
+  <script src="{% static 'js/shopping-cart.js' %}"> 
 
   </script>
 {% endblock %}

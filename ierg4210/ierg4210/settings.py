@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-mr_ee#jwd=zr5h%g#9+!f=8*81&+v(@(tj%oh@z4j!$ajmxmg3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ec2-16-163-186-113.ap-east-1.compute.amazonaws.com', '16.163.186.113',  'secure.s26.ierg4210.ie.cuhk.edu.hk', 's26.ierg4210.ie.cuhk.edu.hk',  'ip-172-31-11-119.ap-east-1.compute.internal']
 
@@ -125,9 +125,8 @@ USE_TZ = True
 import os
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
-MEDIT_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/images'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/images/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

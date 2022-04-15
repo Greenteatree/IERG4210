@@ -72,7 +72,8 @@ class Image(models.Model):
     
     def get_image_url(self):
         image_name = self.name.replace(' ', '_')
-        return f'images/{image_name}'
+        #return f'images/{image_name}'
+        return f'media/images/{image_name}'
 
 class Transaction(models.Model):
     digest = models.CharField(max_length=200, null=True, blank=True)

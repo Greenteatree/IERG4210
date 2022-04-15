@@ -20,7 +20,7 @@ function shoppingCartAddItem(localStorageItem){
     content.setAttribute("id", item.pid);
     let itemName = document.createTextNode(item.name);
     let itemImg = new Image(40, 40);
-    itemImg.src = item.image_url;
+    itemImg.src = 'https://secure.s26.ierg4210.ie.cuhk.edu.hk/media/images/'+ item.name.replaceAll(" ", "_");
     content.appendChild(itemImg);
     content.appendChild(itemName);
     let itemInput = document.createElement("input");

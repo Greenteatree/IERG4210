@@ -24,11 +24,11 @@
 {% block content %}
 	<h2>The recent records.</h2>
 	{% if user.is_authenticated %}
-		<div>
-			{% for transaction in transactions  %}
+		{% for transaction in transactions  %}
+			<p>
 				The invoice number: {{ transaction.invoice }}
 				The product list: {{ transaction.productList }}
-		</div>
+				</p>
 		{% endfor %}
 
 {% else  %}
@@ -39,11 +39,4 @@
 
 		{% endblock %}
 
-{% block javascript %}
-  {{ products_json|json_script:"data" }}
-
-  <script src="{% static 'js/shopping-cart.js' %}">
-
-  </script>
-{% endblock %}
 

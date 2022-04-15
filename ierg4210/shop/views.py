@@ -9,6 +9,17 @@ from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
 import json
 
+def get_braintree_client_token(request):
+    try:
+        braintree_client_token = braintree.ClientToken.generate({ "customer_id": user.id })
+    except:
+        braintree_client_token = braintree.ClientToken.generate({})
+
+
+
+    request.session['braintree_client_token'] = braintree_client_token
+    return 
+
 def index(request):
     num_category = Category.objects.all().count()
     num_instances = ProductInstance.objects.all().count()
@@ -31,6 +42,7 @@ def index(request):
         'page_obj': page_obj,
     } 
     context  = {**get_side_bar_info(), **context}
+    get_braintree_client_token(request)
 
 
     return render(request, 'index.html', context=context)
@@ -58,6 +70,7 @@ class CategoryListView(generic.ListView):
     context = {**get_side_bar_info(), **context}
     template_name = 'category/category_list.html'
     def get(self, request, *args, **kwargs):
+        get_braintree_client_token(request)
         return render(request, __class__.template_name, context=__class__.context)
 
 class CategoryListDetailView(generic.ListView):
@@ -73,6 +86,7 @@ class CategoryListDetailView(generic.ListView):
             'category': category,
         }
         context = {**get_side_bar_info(), **context}
+        get_braintree_client_token(request)
 
         return render(request, 'category/category_list_detail.html', context=context)
 
@@ -90,6 +104,7 @@ class ProductDetailView(generic.DetailView):
             'product_json': json.dumps(product_json),
         }
         context = {**get_side_bar_info(), **context}
+        get_braintree_client_token(request)
         return render(request, template_name, context=context)
     
 
@@ -176,6 +191,15 @@ def payment(request):
     """
 
     # using setting
+    try:
+        braintree_client_token = braintree.ClientToken.generate({ "customer_id": user.id })
+    except:
+        braintree_client_token = braintree.ClientToken.generate({})
+
+
+
+    request.session['braintree_client_token'] = braintree_client_token
+
     
     gateway = braintree.BraintreeGateway(
         braintree.Configuration(
@@ -186,6 +210,7 @@ def payment(request):
         )
     )
     line_items = []
+    # not getting data from guest since crsf denied post request
     for key, val in request.POST.lists():
         if (key.isnumeric()):
             product = get_object_or_404(Product, pid=key)
